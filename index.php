@@ -32,11 +32,16 @@ echo $cb1;
 
 echo "<br>";
 
-echo $cb1->getInfos();
+// echo $cb1->getInfos();
 
-$cb1->debiter(500);
+echo $cb1->debiter(5000);
 
-echo $cb1->getInfos();
+echo $cb1;
+
+echo $cb1->virement($cb2, 150);
+
+
+// echo $cb1->getInfos();
 
 
 ?>

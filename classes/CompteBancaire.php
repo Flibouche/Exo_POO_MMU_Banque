@@ -71,7 +71,7 @@ class CompteBancaire {
     
     public function getSoldeInitial() : float
     {
-        $round = number_format($this->soldeInitial, 2, ","," ");
+        // $round = number_format($this->soldeInitial, 2, ","," ");
         return $this->soldeInitial;
     }
     
@@ -106,32 +106,37 @@ class CompteBancaire {
         Le compte ($this->idBankAccount) '$this->libelle' a été crédité de $credit € <br>
         --------------------------------------------------<br><br>";
     }
-
-    public function debiter(float $credit)
+    
+    public function debiter(float $debit)
     {
-        $this->soldeInitial -= $credit;
-        echo "
-        --------------------------------------------------<br>
-        Le compte ($this->idBankAccount) '$this->libelle' a été débité de $credit € <br>
-        --------------------------------------------------<br><br>";
-    }
+        if($this->soldeInitial > $debit)
+        {
+            $result = ($this->soldeInitial -= $debit);
+            return "
+            --------------------------------------------------<br>
+            Le compte ($this->idBankAccount) '$this->libelle' a été débité de $debit € <br>
+            --------------------------------------------------<br><br>";
+        }
+        else
+        {
+            $result = "Vous avez souhaité retirer $debit €, cependant votre solde est insuffisant !<br><br>";
+        }
 
-    public function accountToDebit(float $credit)
-    {
-        $this->soldeInitial -= $credit;  
-    }
-
-    public function accountToCredit(float $credit)
-    {
-        $this->soldeInitial += $credit;
-    }
-
-    public function virement(CompteBancaire $credit)
-    {
-        $result = "";
-            $result .= toCredit($credit);
-            $result .= toReceive($credit);
         return $result;
+    }
+
+    public function virement(CompteBancaire $accountToCredit, float $montant)
+    {
+        if($montant > 0 && $this->soldeInitial >= $montant)
+        {
+            $this->soldeInitial -= $montant;
+            $accountToCredit->soldeInitial += $montant;
+            return "Virement de ".$montant." € effectué depuis le compte ".$this->libelle." vers le compte ".$accountToCredit->libelle." <br>";
+        }
+        else
+        {
+            return "Vous avez souhaité effectuer un montant de $montant € vers le compte $libelle, cependant votre solde est insuffisant !<br><br>";
+        }
     }
 
     //===================== getInfos() =====================//
